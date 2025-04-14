@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QRShield — Protecting You From QR Scams</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      color: #2b2b2b;
+    }
+    input, textarea, select {
+      width: 100%;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QRShield</h1>
+    <p>We're on a mission to protect people from QR code scams.</p>
+    <p>Scammers are using QR codes to trick users into visiting fake websites. QRShield aims to detect and warn users before they get scammed.</p>
+  </header>
+
+  <section class="section">
+    <h2>💬 Give Us Feedback</h2>
+    <form id="feedback-form">
+      <label for="email">Email (optional):</label>
+      <input type="email" name="email" id="email" placeholder="your@email.com">
+
+      <label for="message">Your thoughts:</label>
+      <textarea name="message" id="message" rows="5" placeholder="What concerns you about QR codes? What would you love this to do?"></textarea>
+
+      <label for="willingness">Would you pay for this?</label>
+      <select name="willingness" id="willingness">
+        <option value="">Select one</option>
+        <option value="yes">Yes</option>
+        <option value="maybe">Maybe</option>
+        <option value="no">No</option>
+      </select>
+
+      <input type="hidden" name="timezone" id="timezone">
+      <input type="hidden" name="source" id="source">
+
+      <button type="submit">Submit Feedback</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>Built with purpose. Feedback and collaboration welcome.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Autofill timezone and source
+      document.getElementById("timezone").value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      document.getElementById("source").value = window.location.href;
+
+      document.getElementById("feedback-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+        const willingness = document.getElementById("willingness").value;
+        const timezone = document.getElementById("timezone").value;
+        const source = document.getElementById("source").value;
+        const submittedAt = new Date().toISOString();
+
+        const res = await fetch("https://api.baserow.io/api/database/rows/table/502722/?user_field_names=true", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "AkoNieohcoFAWyGKcVUHcNtyqzBp7xFk"
+          },
+          body: JSON.stringify({
+            "field_3972838": email,
+            "field_3972839": message,
+            "field_3972907": willingness,
+            "field_3972875": timezone,
+            "field_3972904": source,
+            "field_3972840": submittedAt
+          })
+        });
+
+        if (res.ok) {
+          alert("Thanks for your feedback!");
+          this.reset();
+        } else {
+          alert("Something went wrong. Please try again.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
